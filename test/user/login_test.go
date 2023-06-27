@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/punkestu/open_theunderground/cerror/invalid"
 	"github.com/punkestu/open_theunderground/domain"
+	"github.com/punkestu/open_theunderground/internal/middleware/auth"
 	"github.com/punkestu/open_theunderground/internal/user/entity/request"
 	"github.com/punkestu/open_theunderground/internal/user/entity/response"
 	"github.com/punkestu/open_theunderground/internal/user/handler/api"
@@ -34,7 +35,8 @@ func TestLogin(t *testing.T) {
 		errors.New("server error"),
 	)
 	const endpoint = "/user/login"
-	api.InitUser(app, &mock)
+	mids := auth.CreateMiddleware(&mock)
+	api.InitUser(app, &mock, mids)
 	t.Run("Success", func(t *testing.T) {
 		req, err := test.SendRequest(endpoint, request.Login{
 			Username: "minerva",

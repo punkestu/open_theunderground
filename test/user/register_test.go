@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/punkestu/open_theunderground/cerror/invalid"
 	"github.com/punkestu/open_theunderground/domain"
+	"github.com/punkestu/open_theunderground/internal/middleware/auth"
 	"github.com/punkestu/open_theunderground/internal/user/entity/request"
 	"github.com/punkestu/open_theunderground/internal/user/entity/response"
 	"github.com/punkestu/open_theunderground/internal/user/handler/api"
@@ -26,7 +27,8 @@ func TestRegister(t *testing.T) {
 	}, nil)
 	mock.On("Create", "the minerva", "minerva", "test1234", "minerva@mail.com").Return(nil, invalid.New("username", "username is used"))
 	const endpoint = "/user/register"
-	api.InitUser(app, &mock)
+	mids := auth.CreateMiddleware(&mock)
+	api.InitUser(app, &mock, mids)
 	t.Run("Success", func(t *testing.T) {
 		req, err := test.SendRequest(endpoint, request.Register{
 			Fullname: "the minerva",

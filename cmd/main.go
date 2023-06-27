@@ -12,7 +12,12 @@ import (
 func main() {
 	app := fiber.New()
 	conn, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/theunderground")
-	defer conn.Close()
+	defer func(conn *sql.DB) {
+		err := conn.Close()
+		if err != nil {
+			print(err.Error())
+		}
+	}(conn)
 	if err != nil {
 		println(err.Error())
 		return
@@ -20,5 +25,9 @@ func main() {
 	userRepo := db.NewUserDB(conn)
 	midUser := auth.CreateMiddleware(userRepo)
 	api.InitUser(app, userRepo, midUser)
-	app.Listen(":8080")
+	err = app.Listen(":8080")
+	if err != nil {
+		println(err.Error())
+		return
+	}
 }
