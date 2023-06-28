@@ -21,6 +21,9 @@ func CreateMiddleware(Repo repo.User) *MidS {
 }
 
 func (m *MidS) IsAuth(c *fiber.Ctx) error {
+	if c.Get("Authorization") == "" {
+		return c.Status(http.StatusUnauthorized).JSON(authResp.NewUnauthorized())
+	}
 	realToken := c.Get("Authorization")[7:]
 	token, err := jwt.Parse(realToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
