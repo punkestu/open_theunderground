@@ -80,7 +80,13 @@ func (u *User) register(c *fiber.Ctx) error {
 		}
 		return c.Status(http.StatusInternalServerError).JSON(response.NewServerError(err.Error()))
 	}
-	return c.JSON(user)
+	if token, err := signToken(*user); err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(response.NewServerError(err.Error()))
+	} else {
+		return c.JSON(fiber.Map{
+			"auth_token": *token,
+		})
+	}
 }
 
 func (u *User) profile(c *fiber.Ctx) error {
@@ -88,5 +94,5 @@ func (u *User) profile(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(response.NewServerError(err.Error()))
 	}
-	return c.JSON(response.NewUserFiltered(mUser))
+	return c.JSON(domain.NewUserFiltered(mUser))
 }
