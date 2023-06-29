@@ -9,9 +9,17 @@ type Post struct {
 	CreatedAt time.Time    `json:"createdAt"`
 }
 
+type PostLike struct {
+	Post      *Post        `json:"post"`
+	User      UserFiltered `json:"user"`
+	CreatedAt time.Time    `json:"createdAt"`
+}
+
 type PostUseCase interface {
 	GetAll() ([]*Post, error)
 	GetByID(postId string) (*Post, error)
 	GetByAuthor(authorId string) ([]*Post, error)
 	Create(topic, authorId string) (*Post, error)
+	GetLikeByPost(postId string) ([]*PostLike, error)
+	ToggleLike(postId, authorId string) (*PostLike, error)
 }

@@ -21,6 +21,8 @@ func InitPost(r *fiber.App, repo repo.Post, middleware *auth.MidS) {
 	g.Use(middleware.IsAuth)
 	g.Get("/", useCase.GetAll)
 	g.Post("/", useCase.Create)
+	g.Post("/like", useCase.ToggleLike)
+	g.Get("/like/:postId", useCase.GetLikeByPost)
 }
 
 func (p *Post) GetAll(c *fiber.Ctx) error {

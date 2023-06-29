@@ -1,0 +1,1 @@
+ALTER TABLE post_likes DROP CONSTRAINT post_likes_user_id_fkey;

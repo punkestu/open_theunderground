@@ -8,4 +8,8 @@ type Post interface {
 	GetByAuthor(authorId string) (*[]*domain.Post, error)
 	Create(topic string, authorId string) (*domain.Post, error)
 	Update(topic string) (*domain.Post, error)
+	GetLikeByPostID(postId string) ([]*domain.PostLike, error)
+	GetLikeByPostAndUserID(postId, userId string) (*domain.PostLike, error)
+	CreateLike(postId, userId string) (*domain.PostLike, error)
+	DeleteLike(postId, userId string) error
 }
