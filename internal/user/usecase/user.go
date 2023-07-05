@@ -1,10 +1,10 @@
 package usecase
 
 import (
-	"github.com/punkestu/open_theunderground/cerror/invalid"
-	"github.com/punkestu/open_theunderground/domain"
 	"github.com/punkestu/open_theunderground/internal/user/entity/request"
 	"github.com/punkestu/open_theunderground/internal/user/repo"
+	"github.com/punkestu/open_theunderground/shared/domain"
+	"github.com/punkestu/open_theunderground/shared/error/invalid"
 	"golang.org/x/crypto/bcrypt"
 )
 

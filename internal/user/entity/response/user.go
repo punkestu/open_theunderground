@@ -1,7 +1,7 @@
 package response
 
 import (
-	"github.com/punkestu/open_theunderground/cerror/invalid"
+	"github.com/punkestu/open_theunderground/shared/error/invalid"
 )
 
 type FieldInvalids struct {

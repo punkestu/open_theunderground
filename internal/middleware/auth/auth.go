@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/punkestu/open_theunderground/cerror/invalid"
 	authResp "github.com/punkestu/open_theunderground/internal/middleware/entity/response"
 	"github.com/punkestu/open_theunderground/internal/middleware/repo"
 	"github.com/punkestu/open_theunderground/internal/user/entity/response"
+	"github.com/punkestu/open_theunderground/shared/error/invalid"
 	"net/http"
 	"os"
 )

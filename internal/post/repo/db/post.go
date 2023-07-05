@@ -2,18 +2,11 @@ package db
 
 import (
 	"database/sql"
-	"github.com/punkestu/open_theunderground/cerror/invalid"
-	"github.com/punkestu/open_theunderground/domain"
+	"github.com/punkestu/open_theunderground/shared/domain"
+	"github.com/punkestu/open_theunderground/shared/error/invalid"
 	"github.com/savsgio/gotils/uuid"
 )
 
-type PostDB struct {
-	conn *sql.DB
-}
-
-func NewPostDB(conn *sql.DB) *PostDB {
-	return &PostDB{conn: conn}
-}
 func (p PostDB) GetAll() (*[]*domain.Post, error) {
 	rows, err := p.conn.Query("SELECT p.id, p.topic, p.created_at, u.id, u.fullname, u.username, u.email FROM posts p JOIN users u on u.id = p.author_id")
 	if err != nil {

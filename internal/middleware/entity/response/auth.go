@@ -1,6 +1,8 @@
 package response
 
-import "github.com/punkestu/open_theunderground/cerror/invalid"
+import (
+	"github.com/punkestu/open_theunderground/shared/error/invalid"
+)
 
 type SingleError struct {
 	Error invalid.Invalids `json:"error"`
