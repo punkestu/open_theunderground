@@ -2,8 +2,8 @@ package db
 
 import (
 	"database/sql"
-	"github.com/punkestu/open_theunderground/cerror/invalid"
-	"github.com/punkestu/open_theunderground/domain"
+	"github.com/punkestu/open_theunderground/shared/domain"
+	"github.com/punkestu/open_theunderground/shared/error/invalid"
 	"github.com/savsgio/gotils/uuid"
 	"golang.org/x/crypto/bcrypt"
 )

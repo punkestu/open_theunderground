@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	domain "github.com/punkestu/open_theunderground/domain"
+	"github.com/punkestu/open_theunderground/shared/domain"
 	mock "github.com/stretchr/testify/mock"
 )
 

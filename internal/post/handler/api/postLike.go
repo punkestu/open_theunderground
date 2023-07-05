@@ -2,12 +2,12 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/punkestu/open_theunderground/cerror/invalid"
 	"github.com/punkestu/open_theunderground/internal/post/entity/request"
+	"github.com/punkestu/open_theunderground/shared/error/invalid"
 	"net/http"
 )
 
-func (p *Post) GetLikeByPost(c *fiber.Ctx) error {
+func (p *post) getLikeByPost(c *fiber.Ctx) error {
 	postID := c.Params("postId")
 	postLikes, err := (*p.useCase).GetLikeByPost(postID)
 	if err != nil {
@@ -16,7 +16,7 @@ func (p *Post) GetLikeByPost(c *fiber.Ctx) error {
 	return c.JSON(postLikes)
 }
 
-func (p *Post) ToggleLike(c *fiber.Ctx) error {
+func (p *post) toggleLike(c *fiber.Ctx) error {
 	var body request.OnlyPostID
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(invalid.NewInternal(err.Error()))

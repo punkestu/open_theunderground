@@ -1,6 +1,8 @@
 package repo
 
-import "github.com/punkestu/open_theunderground/domain"
+import (
+	"github.com/punkestu/open_theunderground/shared/domain"
+)
 
 type Post interface {
 	GetAll() (*[]*domain.Post, error)

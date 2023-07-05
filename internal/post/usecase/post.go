@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"github.com/punkestu/open_theunderground/domain"
 	"github.com/punkestu/open_theunderground/internal/post/repo"
+	"github.com/punkestu/open_theunderground/shared/domain"
 )
 
 type Post struct {

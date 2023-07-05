@@ -2,7 +2,7 @@ package db
 
 import (
 	"database/sql"
-	"github.com/punkestu/open_theunderground/domain"
+	"github.com/punkestu/open_theunderground/shared/domain"
 )
 
 func (p PostDB) GetLikeByPostID(postId string) ([]*domain.PostLike, error) {
