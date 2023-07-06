@@ -14,4 +14,7 @@ type Post interface {
 	GetLikeByPostAndUserID(postId, userId string) (*domain.PostLike, error)
 	CreateLike(postId, userId string) (*domain.PostLike, error)
 	DeleteLike(postId, userId string) error
+	CreateComment(postId, userId, comment string) (*domain.PostComment, error)
+	GetCommentByID(commentId string) (*domain.PostComment, error)
+	GetCommentByPostID(postId string) ([]*domain.PostComment, error)
 }

@@ -15,6 +15,13 @@ type PostLike struct {
 	CreatedAt time.Time    `json:"createdAt"`
 }
 
+type PostComment struct {
+	ID        string       `json:"id"`
+	User      UserFiltered `json:"user"`
+	Comment   string       `json:"comment"`
+	CreatedAt time.Time    `json:"createdAt"`
+}
+
 type PostUseCase interface {
 	GetAll() ([]*Post, error)
 	GetByID(postId string) (*Post, error)
@@ -22,4 +29,7 @@ type PostUseCase interface {
 	Create(topic, authorId string) (*Post, error)
 	GetLikeByPost(postId string) ([]*PostLike, error)
 	ToggleLike(postId, authorId string) (*PostLike, error)
+	CreateComment(postId, comment, userId string) (*PostComment, error)
+	GetCommentByID(commentId string) (*PostComment, error)
+	GetCommentByPostID(postId string) ([]*PostComment, error)
 }

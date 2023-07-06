@@ -19,4 +19,7 @@ func InitPost(r *fiber.App, repo repo.Post, middleware *auth.MidS) {
 	g.Post("/", useCase.create)
 	g.Post("/like", useCase.toggleLike)
 	g.Get("/like/:postId", useCase.getLikeByPost)
+	g.Post("/comment", useCase.CreateComment)
+	g.Get("/comment/:commentId", useCase.GetCommentByID)
+	g.Get("/:postId/comment", useCase.GetCommentByPostID)
 }
