@@ -12,7 +12,7 @@ func (p *post) CreateComment(c *fiber.Ctx) error {
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(invalid.NewInternal(err.Error()))
 	}
-	comment, err := p.useCase.CreateComment(body.PostID, body.Comment, c.Locals("userId").(string))
+	comment, err := p.useCase.CreateComment(body.PostID, c.Locals("userId").(string), body.Comment)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(invalid.NewInternal(err.Error()))
 	}
