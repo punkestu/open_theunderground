@@ -1,0 +1,1 @@
+ALTER TABLE post_comments DROP CONSTRAINT post_comments_post_id_fkey;
