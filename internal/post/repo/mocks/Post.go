@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	"github.com/punkestu/open_theunderground/shared/domain"
+	domain "github.com/punkestu/open_theunderground/shared/domain"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -38,20 +38,86 @@ func (_m *Post) Create(topic string, authorId string) (*domain.Post, error) {
 	return r0, r1
 }
 
+// CreateComment provides a mock function with given fields: postId, userId, comment
+func (_m *Post) CreateComment(postId string, userId string, comment string) (*domain.PostComment, error) {
+	ret := _m.Called(postId, userId, comment)
+
+	var r0 *domain.PostComment
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string, string) (*domain.PostComment, error)); ok {
+		return rf(postId, userId, comment)
+	}
+	if rf, ok := ret.Get(0).(func(string, string, string) *domain.PostComment); ok {
+		r0 = rf(postId, userId, comment)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.PostComment)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string, string) error); ok {
+		r1 = rf(postId, userId, comment)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CreateLike provides a mock function with given fields: postId, userId
+func (_m *Post) CreateLike(postId string, userId string) (*domain.PostLike, error) {
+	ret := _m.Called(postId, userId)
+
+	var r0 *domain.PostLike
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string) (*domain.PostLike, error)); ok {
+		return rf(postId, userId)
+	}
+	if rf, ok := ret.Get(0).(func(string, string) *domain.PostLike); ok {
+		r0 = rf(postId, userId)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.PostLike)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string) error); ok {
+		r1 = rf(postId, userId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DeleteLike provides a mock function with given fields: postId, userId
+func (_m *Post) DeleteLike(postId string, userId string) error {
+	ret := _m.Called(postId, userId)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, string) error); ok {
+		r0 = rf(postId, userId)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetAll provides a mock function with given fields:
-func (_m *Post) GetAll() ([]*domain.Post, error) {
+func (_m *Post) GetAll() (*[]*domain.Post, error) {
 	ret := _m.Called()
 
-	var r0 []*domain.Post
+	var r0 *[]*domain.Post
 	var r1 error
-	if rf, ok := ret.Get(0).(func() ([]*domain.Post, error)); ok {
+	if rf, ok := ret.Get(0).(func() (*[]*domain.Post, error)); ok {
 		return rf()
 	}
-	if rf, ok := ret.Get(0).(func() []*domain.Post); ok {
+	if rf, ok := ret.Get(0).(func() *[]*domain.Post); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*domain.Post)
+			r0 = ret.Get(0).(*[]*domain.Post)
 		}
 	}
 
@@ -65,19 +131,19 @@ func (_m *Post) GetAll() ([]*domain.Post, error) {
 }
 
 // GetByAuthor provides a mock function with given fields: authorId
-func (_m *Post) GetByAuthor(authorId string) ([]*domain.Post, error) {
+func (_m *Post) GetByAuthor(authorId string) (*[]*domain.Post, error) {
 	ret := _m.Called(authorId)
 
-	var r0 []*domain.Post
+	var r0 *[]*domain.Post
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string) ([]*domain.Post, error)); ok {
+	if rf, ok := ret.Get(0).(func(string) (*[]*domain.Post, error)); ok {
 		return rf(authorId)
 	}
-	if rf, ok := ret.Get(0).(func(string) []*domain.Post); ok {
+	if rf, ok := ret.Get(0).(func(string) *[]*domain.Post); ok {
 		r0 = rf(authorId)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*domain.Post)
+			r0 = ret.Get(0).(*[]*domain.Post)
 		}
 	}
 
@@ -104,6 +170,110 @@ func (_m *Post) GetByID(postId string) (*domain.Post, error) {
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*domain.Post)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(postId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetCommentByID provides a mock function with given fields: commentId
+func (_m *Post) GetCommentByID(commentId string) (*domain.PostComment, error) {
+	ret := _m.Called(commentId)
+
+	var r0 *domain.PostComment
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (*domain.PostComment, error)); ok {
+		return rf(commentId)
+	}
+	if rf, ok := ret.Get(0).(func(string) *domain.PostComment); ok {
+		r0 = rf(commentId)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.PostComment)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(commentId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetCommentByPostID provides a mock function with given fields: postId
+func (_m *Post) GetCommentByPostID(postId string) ([]*domain.PostComment, error) {
+	ret := _m.Called(postId)
+
+	var r0 []*domain.PostComment
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) ([]*domain.PostComment, error)); ok {
+		return rf(postId)
+	}
+	if rf, ok := ret.Get(0).(func(string) []*domain.PostComment); ok {
+		r0 = rf(postId)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*domain.PostComment)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(postId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetLikeByPostAndUserID provides a mock function with given fields: postId, userId
+func (_m *Post) GetLikeByPostAndUserID(postId string, userId string) (*domain.PostLike, error) {
+	ret := _m.Called(postId, userId)
+
+	var r0 *domain.PostLike
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string) (*domain.PostLike, error)); ok {
+		return rf(postId, userId)
+	}
+	if rf, ok := ret.Get(0).(func(string, string) *domain.PostLike); ok {
+		r0 = rf(postId, userId)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.PostLike)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string) error); ok {
+		r1 = rf(postId, userId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetLikeByPostID provides a mock function with given fields: postId
+func (_m *Post) GetLikeByPostID(postId string) ([]*domain.PostLike, error) {
+	ret := _m.Called(postId)
+
+	var r0 []*domain.PostLike
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) ([]*domain.PostLike, error)); ok {
+		return rf(postId)
+	}
+	if rf, ok := ret.Get(0).(func(string) []*domain.PostLike); ok {
+		r0 = rf(postId)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*domain.PostLike)
 		}
 	}
 
