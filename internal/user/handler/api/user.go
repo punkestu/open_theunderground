@@ -44,8 +44,8 @@ func (u *user) login(c *fiber.Ctx) error {
 	if token, err := lib.SignToken(*user); err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(response.NewServerError(err.Error()))
 	} else {
-		return c.JSON(fiber.Map{
-			"auth_token": *token,
+		return c.JSON(response.JustToken{
+			AuthToken: *token,
 		})
 	}
 }
@@ -69,8 +69,8 @@ func (u *user) register(c *fiber.Ctx) error {
 	if token, err := lib.SignToken(*mUser); err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(response.NewServerError(err.Error()))
 	} else {
-		return c.JSON(fiber.Map{
-			"auth_token": *token,
+		return c.JSON(response.JustToken{
+			AuthToken: *token,
 		})
 	}
 }
