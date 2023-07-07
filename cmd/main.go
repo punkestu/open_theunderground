@@ -5,6 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
 	"github.com/punkestu/open_theunderground/internal/middleware/auth"
+	"github.com/punkestu/open_theunderground/internal/middleware/repo/jwt"
 	api2 "github.com/punkestu/open_theunderground/internal/post/handler/api"
 	db2 "github.com/punkestu/open_theunderground/internal/post/repo/db"
 	"github.com/punkestu/open_theunderground/internal/user/handler/api"
@@ -27,7 +28,8 @@ func main() {
 
 	userRepo := db.NewUserDB(conn)
 	postRepo := db2.NewPostDB(conn)
-	midAuth := auth.CreateMiddleware(userRepo)
+	mJwtValidator := jwtValidator.NewValidator(userRepo)
+	midAuth := auth.CreateMiddleware(mJwtValidator)
 	api.InitUser(app, userRepo, midAuth)
 	api2.InitPost(app, postRepo, midAuth)
 

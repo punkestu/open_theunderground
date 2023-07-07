@@ -17,3 +17,7 @@ func NewServerError(message string) ServerError {
 		Error: invalid.New("internal", message),
 	}
 }
+
+type JustToken struct {
+	AuthToken string `json:"auth_Token"`
+}

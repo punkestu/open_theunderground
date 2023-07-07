@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/gofiber/fiber/v2"
 	"github.com/punkestu/open_theunderground/internal/middleware/auth"
+	mocks2 "github.com/punkestu/open_theunderground/internal/middleware/repo/mocks"
 	"github.com/punkestu/open_theunderground/internal/user/entity/request"
 	"github.com/punkestu/open_theunderground/internal/user/entity/response"
 	"github.com/punkestu/open_theunderground/internal/user/handler/api"
@@ -12,6 +13,8 @@ import (
 	"github.com/punkestu/open_theunderground/shared/error/invalid"
 	"github.com/punkestu/open_theunderground/test"
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/crypto/bcrypt"
+	"log"
 	"net/http"
 	"testing"
 )
@@ -19,11 +22,15 @@ import (
 func TestLogin(t *testing.T) {
 	app := fiber.New()
 	mock := *mocks.NewUser(t)
+	password, err := bcrypt.GenerateFromPassword([]byte("test1234"), 10)
+	if err != nil {
+		log.Fatal("system is broke, it cannot encrypt")
+	}
 	mock.On("GetByUsername", "minerva").Return(&domain.User{
 		ID:       "test1234",
 		Fullname: "minerva the first",
 		Username: "minerva",
-		Password: "test1234",
+		Password: string(password),
 		Email:    "minerva@mail.com",
 	}, nil)
 	mock.On("GetByUsername", "minerv").Return(
@@ -35,29 +42,32 @@ func TestLogin(t *testing.T) {
 		errors.New("server error"),
 	)
 	const endpoint = "/user/login"
-	mids := auth.CreateMiddleware(&mock)
+	jwtMock := *mocks2.NewJwtValidator(t)
+	//IsValid(token string) (string, error)
+	jwtMock.On("IsValid", "abcdefg").Return("user1234", nil)
+	mids := auth.CreateMiddleware(&jwtMock)
 	api.InitUser(app, &mock, mids)
 	t.Run("Success", func(t *testing.T) {
 		req, err := test.SendRequest(endpoint, request.Login{
 			Username: "minerva",
 			Password: "test1234",
-		})
+		}, nil)
 		assert.Nil(t, err)
 
 		resp, err := app.Test(req)
 		assert.Nil(t, err)
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
 
-		resBody := domain.User{}
+		resBody := response.JustToken{}
 		err = test.GetBody(resp, &resBody)
 		assert.Nil(t, err)
-		assert.Equal(t, "test1234", resBody.ID)
-		assert.Equal(t, http.StatusOK, resp.StatusCode)
+		assert.NotNil(t, resBody.AuthToken)
 	})
 	t.Run("Password is wrong", func(t *testing.T) {
 		req, err := test.SendRequest(endpoint, request.Login{
 			Username: "minerva",
 			Password: "test123",
-		})
+		}, nil)
 		assert.Nil(t, err)
 
 		resp, err := app.Test(req)
@@ -73,7 +83,7 @@ func TestLogin(t *testing.T) {
 		req, err := test.SendRequest(endpoint, request.Login{
 			Username: "minerv",
 			Password: "test1234",
-		})
+		}, nil)
 		assert.Nil(t, err)
 
 		resp, err := app.Test(req)
@@ -89,7 +99,7 @@ func TestLogin(t *testing.T) {
 		req, err := test.SendRequest(endpoint, request.Login{
 			Username: "",
 			Password: "test1234",
-		})
+		}, nil)
 		assert.Nil(t, err)
 
 		resp, err := app.Test(req)
