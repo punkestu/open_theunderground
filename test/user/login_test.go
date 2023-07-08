@@ -10,7 +10,7 @@ import (
 	"github.com/punkestu/open_theunderground/internal/user/handler/api"
 	"github.com/punkestu/open_theunderground/internal/user/repo/mocks"
 	"github.com/punkestu/open_theunderground/shared/domain"
-	"github.com/punkestu/open_theunderground/shared/error/invalid"
+	"github.com/punkestu/open_theunderground/shared/exception"
 	"github.com/punkestu/open_theunderground/test"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/crypto/bcrypt"
@@ -35,15 +35,15 @@ func TestLogin(t *testing.T) {
 	}, nil)
 	mock.On("GetByUsername", "minerv").Return(
 		nil,
-		invalid.New("username", "username is not found"),
+		exception.New("username", "username is not found"),
 	)
 	mock.On("GetByUsername", "").Return(
 		nil,
-		errors.New("server error"),
+		errors.New("server exception"),
 	)
 	const endpoint = "/user/login"
 	jwtMock := *mocks2.NewJwtValidator(t)
-	//IsValid(token string) (string, error)
+	//IsValid(token string) (string, exception)
 	jwtMock.On("IsValid", "abcdefg").Return("user1234", nil)
 	mids := auth.CreateMiddleware(&jwtMock)
 	api.InitUser(app, &mock, mids)
@@ -95,7 +95,7 @@ func TestLogin(t *testing.T) {
 		assert.Equal(t, http.StatusUnauthorized, resp.StatusCode)
 		assert.Equal(t, "username is not found", resBody.Error[0].Error())
 	})
-	t.Run("Server error", func(t *testing.T) {
+	t.Run("Server exception", func(t *testing.T) {
 		req, err := test.SendRequest(endpoint, request.Login{
 			Username: "",
 			Password: "test1234",
@@ -109,6 +109,6 @@ func TestLogin(t *testing.T) {
 		err = test.GetBody(resp, &resBody)
 		assert.Nil(t, err)
 		assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
-		assert.Equal(t, "server error", resBody.Error.Error())
+		assert.Equal(t, "server exception", resBody.Error.Error())
 	})
 }

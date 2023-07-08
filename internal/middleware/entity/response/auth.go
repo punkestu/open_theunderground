@@ -1,17 +1,17 @@
 package response
 
 import (
-	"github.com/punkestu/open_theunderground/shared/error/invalid"
+	"github.com/punkestu/open_theunderground/shared/exception"
 )
 
 type SingleError struct {
-	Error invalid.Invalids `json:"error"`
+	Error exception.Invalids `json:"exception"`
 }
 
 func NewInvalidToken() SingleError {
-	return SingleError{Error: invalid.New("token", "invalid token")}
+	return SingleError{Error: exception.New("token", "invalid token")}
 }
 
 func NewUnauthorized() SingleError {
-	return SingleError{Error: invalid.New("token", "unauthorized")}
+	return SingleError{Error: exception.New("token", "unauthorized")}
 }

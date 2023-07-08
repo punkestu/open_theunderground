@@ -6,7 +6,7 @@ import (
 	authResp "github.com/punkestu/open_theunderground/internal/middleware/entity/response"
 	"github.com/punkestu/open_theunderground/internal/middleware/repo"
 	"github.com/punkestu/open_theunderground/internal/user/entity/response"
-	"github.com/punkestu/open_theunderground/shared/error/invalid"
+	"github.com/punkestu/open_theunderground/shared/exception"
 	"os"
 )
 
@@ -37,7 +37,7 @@ func (v *Validator) IsValid(realToken string) (string, error) {
 		sub, _ := claims.GetSubject()
 		_, err := (*v.userRepo).GetByID(sub)
 		if err != nil {
-			if iErr := invalid.Parse(err); iErr != nil {
+			if iErr := exception.Parse(err); iErr != nil {
 				return "", authResp.NewInvalidToken().Error
 			}
 			return "", response.NewServerError(err.Error()).Error

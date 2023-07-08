@@ -4,16 +4,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/punkestu/open_theunderground/internal/post/entity/request"
 	"github.com/punkestu/open_theunderground/internal/user/entity/response"
-	"github.com/punkestu/open_theunderground/shared/error/invalid"
+	"github.com/punkestu/open_theunderground/shared/exception"
 	"net/http"
 )
 
 func (p *post) getAll(c *fiber.Ctx) error {
 	mPosts, err := p.useCase.GetAll()
 	if err != nil {
-		if iErr := invalid.Parse(err); iErr != nil {
+		if iErr := exception.Parse(err); iErr != nil {
 			return c.Status(http.StatusBadRequest).JSON(response.FieldInvalids{
-				Error: []invalid.Invalids{
+				Error: []exception.Invalids{
 					*iErr,
 				},
 			})
@@ -30,9 +30,9 @@ func (p *post) create(c *fiber.Ctx) error {
 	}
 	mPost, err := p.useCase.Create(body.Topic, c.Locals("userId").(string))
 	if err != nil {
-		if iErr := invalid.Parse(err); iErr != nil {
+		if iErr := exception.Parse(err); iErr != nil {
 			return c.Status(http.StatusBadRequest).JSON(response.FieldInvalids{
-				Error: []invalid.Invalids{
+				Error: []exception.Invalids{
 					*iErr,
 				},
 			})

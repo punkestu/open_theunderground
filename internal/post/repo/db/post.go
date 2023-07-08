@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"github.com/punkestu/open_theunderground/shared/domain"
-	"github.com/punkestu/open_theunderground/shared/error/invalid"
+	"github.com/punkestu/open_theunderground/shared/exception"
 	"github.com/savsgio/gotils/uuid"
 )
 
@@ -28,7 +28,7 @@ func (p PostDB) GetByID(postId string) (*domain.Post, error) {
 	err := p.conn.QueryRow("SELECT p.id, p.topic, p.created_at, u.id, u.fullname, u.username, u.email FROM posts p JOIN users u on u.id = p.author_id WHERE p.id=?", postId).Scan(&mPost.ID, &mPost.Topic, &mPost.CreatedAt, &mPost.Author.ID, &mPost.Author.Fullname, &mPost.Author.Username, &mPost.Author.Email)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
-			return nil, invalid.New("postId", "Id post is not found")
+			return nil, exception.New("postId", "Id post is not found")
 		}
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func (p PostDB) GetByAuthor(authorId string) (*[]*domain.Post, error) {
 	rows, err := p.conn.Query("SELECT p.id, p.topic, p.created_at, u.id, u.fullname, u.username, u.email FROM posts p JOIN users u on u.id = p.author_id WHERE u.id=?", authorId)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
-			return nil, invalid.New("postId", "Id post is not found")
+			return nil, exception.New("postId", "Id post is not found")
 		}
 		return nil, err
 	}

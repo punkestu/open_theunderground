@@ -18,7 +18,7 @@ import (
 func TestCreate(t *testing.T) {
 	app := fiber.New()
 	mock := *mocks.NewPost(t)
-	//Create(topic string, authorId string) (*domain.Post, error)
+	//Create(topic string, authorId string) (*domain.Post, exception)
 	mock.On("Create", "test", "user1234").Return(&domain.Post{
 		ID:    "test1234",
 		Topic: "test",
@@ -31,7 +31,7 @@ func TestCreate(t *testing.T) {
 		CreatedAt: time.Now(),
 	}, nil)
 	jwtMock := *mocks2.NewJwtValidator(t)
-	//IsValid(token string) (string, error)
+	//IsValid(token string) (string, exception)
 	jwtMock.On("IsValid", "abcdefg").Return("user1234", nil)
 	const endpoint = "/post"
 	mids := auth.CreateMiddleware(&jwtMock)

@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"github.com/punkestu/open_theunderground/shared/domain"
-	"github.com/punkestu/open_theunderground/shared/error/invalid"
+	"github.com/punkestu/open_theunderground/shared/exception"
 	"github.com/savsgio/gotils/uuid"
 )
 
@@ -22,7 +22,7 @@ func (p PostDB) GetCommentByID(commentId string) (*domain.PostComment, error) {
 	err := p.conn.QueryRow("SELECT pc.id, pc.comment, pc.created_at, u.id, u.fullname, u.username, u.email FROM post_comments pc JOIN users u on u.id = pc.user_id WHERE pc.id=?", commentId).Scan(&mPostComment.ID, &mPostComment.Comment, &mPostComment.CreatedAt, &mPostComment.User.ID, &mPostComment.User.Fullname, &mPostComment.User.Username, &mPostComment.User.Email)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
-			return nil, invalid.New("postId", "Id post is not found")
+			return nil, exception.New("postId", "Id post is not found")
 		}
 		return nil, err
 	}

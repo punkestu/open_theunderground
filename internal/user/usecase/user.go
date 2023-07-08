@@ -4,7 +4,7 @@ import (
 	"github.com/punkestu/open_theunderground/internal/user/entity/request"
 	"github.com/punkestu/open_theunderground/internal/user/repo"
 	"github.com/punkestu/open_theunderground/shared/domain"
-	"github.com/punkestu/open_theunderground/shared/error/invalid"
+	"github.com/punkestu/open_theunderground/shared/exception"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -19,7 +19,7 @@ func NewUser(repo *repo.User) *User {
 func (u *User) Login(req *request.Login) (user *domain.User, err error) {
 	user, err = (*u.Repo).GetByUsername(req.Username)
 	if user != nil && bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)) != nil {
-		user, err = nil, invalid.New("password", "password is wrong")
+		user, err = nil, exception.New("password", "password is wrong")
 	}
 	return
 }
