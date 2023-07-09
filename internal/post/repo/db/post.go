@@ -62,6 +62,6 @@ func (p PostDB) Create(topic, authorId string) (*domain.Post, error) {
 
 	return p.GetByID(id)
 }
-func (p PostDB) Update(topic string) (*domain.Post, error) {
+func (p PostDB) Update(_ string) (*domain.Post, error) {
 	return nil, nil
 }

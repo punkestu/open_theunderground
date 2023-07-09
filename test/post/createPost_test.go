@@ -32,13 +32,13 @@ func TestCreate(t *testing.T) {
 	}, nil)
 	jwtMock := *mocks2.NewJwtValidator(t)
 	//IsValid(token string) (string, exception)
-	jwtMock.On("IsValid", "abcdefg").Return("user1234", nil)
+	jwtMock.On("IsValid", "test_token").Return("user1234", nil)
 	const endpoint = "/post"
 	mids := auth.CreateMiddleware(&jwtMock)
 	api.InitPost(app, &mock, mids)
 	t.Run("Success", func(t *testing.T) {
 		req, err := test.SendRequest(endpoint, request.Create{Topic: "test"}, map[string]string{
-			"Authorization": "bearer abcdefg",
+			"Authorization": "bearer test_token",
 		})
 		assert.Nil(t, err)
 
