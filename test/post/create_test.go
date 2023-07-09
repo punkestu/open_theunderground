@@ -2,8 +2,6 @@ package post
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/punkestu/open_theunderground/internal/middleware/auth"
-	mocks2 "github.com/punkestu/open_theunderground/internal/middleware/repo/mocks"
 	"github.com/punkestu/open_theunderground/internal/post/entity/request"
 	"github.com/punkestu/open_theunderground/internal/post/entity/response"
 	"github.com/punkestu/open_theunderground/internal/post/handler/api"
@@ -31,12 +29,8 @@ func TestCreate(t *testing.T) {
 		},
 		CreatedAt: time.Now(),
 	}, nil)
-	jwtMock := *mocks2.NewJwtValidator(t)
-	//IsValid(token string) (string, exception)
-	jwtMock.On("IsValid", "test_token").Return("user1234", nil)
 	const endpoint = "/post"
-	mids := auth.CreateMiddleware(&jwtMock)
-	api.InitPost(app, &mock, mids)
+	api.InitPost(app, &mock, test.CreateAuthMock(t, "test_token", "user1234"))
 	t.Run("Success", func(t *testing.T) {
 		req, err := test.SendRequest(http.MethodPost, endpoint, request.Create{Topic: "test"}, map[string]string{
 			"Authorization": "bearer test_token",

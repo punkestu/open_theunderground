@@ -2,8 +2,6 @@ package user
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/punkestu/open_theunderground/internal/middleware/auth"
-	mocks2 "github.com/punkestu/open_theunderground/internal/middleware/repo/mocks"
 	"github.com/punkestu/open_theunderground/internal/user/entity/request"
 	"github.com/punkestu/open_theunderground/internal/user/entity/response"
 	"github.com/punkestu/open_theunderground/internal/user/handler/api"
@@ -29,11 +27,7 @@ func TestRegister(t *testing.T) {
 	}, nil)
 	mock.On("Create", "the minerva", "minerva", "test1234", "minerva@mail.com").Return(nil, exception.New("username", "username is used"))
 	const endpoint = "/user/register"
-	jwtMock := *mocks2.NewJwtValidator(t)
-	//IsValid(token string) (string, exception)
-	jwtMock.On("IsValid", "").Return("user1234", nil)
-	mids := auth.CreateMiddleware(&jwtMock)
-	api.InitUser(app, &mock, mids)
+	api.InitUser(app, &mock, test.CreateAuthMock(t, "test_token", "user1234"))
 	t.Run("Success", func(t *testing.T) {
 		req, err := test.SendRequest(http.MethodPost, endpoint, request.Register{
 			Fullname: "the minerva",
