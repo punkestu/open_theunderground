@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor client
+boundary user_domain
+control user_handler
+database user_repo
+
+client -> user_domain: GET /user/me
+user_domain -> user_handler: profile()
+user_handler -> user_repo: GetByID(userId :string)
+user_repo --> user_handler: domain.User{}
+user_handler --> user_domain: domain.UserFiltered{}
+user_domain --> client: JSON
+
+@enduml
