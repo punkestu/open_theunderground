@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"github.com/punkestu/open_theunderground/shared/domain"
-	"github.com/punkestu/open_theunderground/shared/error/invalid"
+	"github.com/punkestu/open_theunderground/shared/exception"
 	"github.com/savsgio/gotils/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -21,7 +21,7 @@ func (u UserDB) GetByID(userId string) (*domain.User, error) {
 	err := u.conn.QueryRow("SELECT * FROM users WHERE id=?", userId).Scan(&mUser.ID, &mUser.Fullname, &mUser.Username, &mUser.Password, &mUser.Email)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
-			return nil, invalid.New("userId", "Id user is not found")
+			return nil, exception.New("userId", "Id user is not found")
 		}
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func (u UserDB) GetByUsername(username string) (*domain.User, error) {
 	err := u.conn.QueryRow("SELECT * FROM users WHERE username=?", username).Scan(&mUser.ID, &mUser.Fullname, &mUser.Username, &mUser.Password, &mUser.Email)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
-			return nil, invalid.New("username", "username is not found")
+			return nil, exception.New("username", "username is not found")
 		}
 		return nil, err
 	}
@@ -42,9 +42,9 @@ func (u UserDB) GetByUsername(username string) (*domain.User, error) {
 
 func (u UserDB) Create(fullname, username, password, email string) (*domain.User, error) {
 	if mUser, err := u.GetByUsername(username); mUser != nil {
-		return nil, invalid.New("username", "username is used")
+		return nil, exception.New("username", "username is used")
 	} else if err != nil {
-		if iErr := invalid.Parse(err); iErr == nil {
+		if iErr := exception.Parse(err); iErr == nil {
 			return nil, err
 		}
 	}
@@ -64,10 +64,10 @@ func (u UserDB) Create(fullname, username, password, email string) (*domain.User
 func (u UserDB) Update(userId, fullname, username, email string) (*domain.User, error) {
 	if mUser, err := u.GetByUsername(username); mUser != nil {
 		if mUser.ID != userId {
-			return nil, invalid.New("username", "username is used")
+			return nil, exception.New("username", "username is used")
 		}
 	} else if err != nil {
-		if iErr := invalid.Parse(err); iErr == nil {
+		if iErr := exception.Parse(err); iErr == nil {
 			return nil, err
 		}
 	}

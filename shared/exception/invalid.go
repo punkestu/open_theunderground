@@ -1,4 +1,4 @@
-package invalid
+package exception
 
 type Invalid interface {
 	Error() string

@@ -9,7 +9,8 @@ import (
 	"github.com/punkestu/open_theunderground/internal/user/repo"
 	"github.com/punkestu/open_theunderground/internal/user/usecase"
 	"github.com/punkestu/open_theunderground/shared/domain"
-	"github.com/punkestu/open_theunderground/shared/error/invalid"
+	"github.com/punkestu/open_theunderground/shared/exception"
+	exceptionResponse "github.com/punkestu/open_theunderground/shared/exception/http/response"
 	"net/http"
 )
 
@@ -32,17 +33,17 @@ func (u *user) login(c *fiber.Ctx) error {
 	}
 	user, err := u.useCase.Login(&r)
 	if err != nil {
-		if iErr := invalid.Parse(err); iErr != nil {
-			return c.Status(http.StatusUnauthorized).JSON(response.FieldInvalids{
-				Error: []invalid.Invalids{
+		if iErr := exception.Parse(err); iErr != nil {
+			return c.Status(http.StatusUnauthorized).JSON(exceptionResponse.FieldInvalids{
+				Error: []exception.Invalids{
 					*iErr,
 				},
 			})
 		}
-		return c.Status(http.StatusInternalServerError).JSON(response.NewServerError(err.Error()))
+		return c.Status(http.StatusInternalServerError).JSON(exceptionResponse.NewServerError(err.Error()))
 	}
 	if token, err := lib.SignToken(*user); err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(response.NewServerError(err.Error()))
+		return c.Status(http.StatusInternalServerError).JSON(exceptionResponse.NewServerError(err.Error()))
 	} else {
 		return c.JSON(response.JustToken{
 			AuthToken: *token,
@@ -57,17 +58,17 @@ func (u *user) register(c *fiber.Ctx) error {
 	}
 	mUser, err := u.useCase.Register(&r)
 	if err != nil {
-		if iErr := invalid.Parse(err); iErr != nil {
-			return c.Status(http.StatusUnauthorized).JSON(response.FieldInvalids{
-				Error: []invalid.Invalids{
+		if iErr := exception.Parse(err); iErr != nil {
+			return c.Status(http.StatusUnauthorized).JSON(exceptionResponse.FieldInvalids{
+				Error: []exception.Invalids{
 					*iErr,
 				},
 			})
 		}
-		return c.Status(http.StatusInternalServerError).JSON(response.NewServerError(err.Error()))
+		return c.Status(http.StatusInternalServerError).JSON(exceptionResponse.NewServerError(err.Error()))
 	}
 	if token, err := lib.SignToken(*mUser); err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(response.NewServerError(err.Error()))
+		return c.Status(http.StatusInternalServerError).JSON(exceptionResponse.NewServerError(err.Error()))
 	} else {
 		return c.JSON(response.JustToken{
 			AuthToken: *token,
@@ -78,7 +79,7 @@ func (u *user) register(c *fiber.Ctx) error {
 func (u *user) profile(c *fiber.Ctx) error {
 	mUser, err := (*u.useCase.Repo).GetByID(c.Locals("userId").(string))
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(response.NewServerError(err.Error()))
+		return c.Status(http.StatusInternalServerError).JSON(exceptionResponse.NewServerError(err.Error()))
 	}
 	return c.JSON(domain.NewUserFiltered(mUser))
 }
