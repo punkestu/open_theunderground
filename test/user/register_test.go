@@ -35,7 +35,7 @@ func TestRegister(t *testing.T) {
 	mids := auth.CreateMiddleware(&jwtMock)
 	api.InitUser(app, &mock, mids)
 	t.Run("Success", func(t *testing.T) {
-		req, err := test.SendRequest(endpoint, request.Register{
+		req, err := test.SendRequest(http.MethodPost, endpoint, request.Register{
 			Fullname: "the minerva",
 			Username: "username",
 			Password: "test1234",
@@ -53,7 +53,7 @@ func TestRegister(t *testing.T) {
 		assert.NotNil(t, resBody.AuthToken)
 	})
 	t.Run("Username is used", func(t *testing.T) {
-		req, err := test.SendRequest(endpoint, request.Register{
+		req, err := test.SendRequest(http.MethodPost, endpoint, request.Register{
 			Fullname: "the minerva",
 			Username: "minerva",
 			Password: "test1234",

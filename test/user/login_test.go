@@ -49,7 +49,7 @@ func TestLogin(t *testing.T) {
 	mids := auth.CreateMiddleware(&jwtMock)
 	api.InitUser(app, &mock, mids)
 	t.Run("Success", func(t *testing.T) {
-		req, err := test.SendRequest(endpoint, request.Login{
+		req, err := test.SendRequest(http.MethodPost, endpoint, request.Login{
 			Username: "minerva",
 			Password: "test1234",
 		}, nil)
@@ -65,7 +65,7 @@ func TestLogin(t *testing.T) {
 		assert.NotNil(t, resBody.AuthToken)
 	})
 	t.Run("Password is wrong", func(t *testing.T) {
-		req, err := test.SendRequest(endpoint, request.Login{
+		req, err := test.SendRequest(http.MethodPost, endpoint, request.Login{
 			Username: "minerva",
 			Password: "test123",
 		}, nil)
@@ -81,7 +81,7 @@ func TestLogin(t *testing.T) {
 		assert.Equal(t, "password is wrong", resBody.Error[0].Error())
 	})
 	t.Run("Username is wrong", func(t *testing.T) {
-		req, err := test.SendRequest(endpoint, request.Login{
+		req, err := test.SendRequest(http.MethodPost, endpoint, request.Login{
 			Username: "wrong_username",
 			Password: "test1234",
 		}, nil)
@@ -97,7 +97,7 @@ func TestLogin(t *testing.T) {
 		assert.Equal(t, "username is not found", resBody.Error[0].Error())
 	})
 	t.Run("Server exception", func(t *testing.T) {
-		req, err := test.SendRequest(endpoint, request.Login{
+		req, err := test.SendRequest(http.MethodPost, endpoint, request.Login{
 			Username: "",
 			Password: "test1234",
 		}, nil)
