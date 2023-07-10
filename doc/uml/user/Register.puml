@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor client
+boundary user_domain
+control user_handler
+control user_usecase
+database user_repo
+
+client -> user_domain: POST /user/register
+user_domain -> user_handler: register()
+user_handler -> user_usecase: register(requestBody :request.Register{})
+user_usecase -> user_repo:\
+ create(fullname :string, \n\
+ username :string, \n\
+ password :string, email :string)
+user_repo --> user_usecase: domain.User{}
+user_usecase --> user_handler: domain.User{}
+user_handler -> user_handler: createToken(userId :string)
+user_handler --> user_domain: response.JustToken{}
+user_domain --> client: JSON
+
+@enduml

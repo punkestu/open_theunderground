@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor client
+boundary post_domain
+control post_handler
+control post_usecase
+database post_repo
+
+client -> post_domain: POST /post
+post_domain -> post_handler: create()
+post_handler -> post_usecase: Create(topic :string, userId :string)
+post_usecase -> post_repo: Create(topic :string, userId :string)
+post_repo --> post_usecase: domain.Post{}
+post_usecase --> post_handler: domain.Post{}
+post_handler --> post_domain: response.CreatePost{}
+post_domain --> client: JSON
+@enduml
