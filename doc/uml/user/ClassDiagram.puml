@@ -1,0 +1,32 @@
+@startuml
+
+interface shared.domain.UserUsecase{
+    +Login(username, password string) (*User, error)
+    +Register(fullname, username, password, email string) (*User, error)
+    +GetProfile(userID string) (*User, error)
+}
+interface internal.user.repo.User{
+    +GetByID(userID string) (*domain.User, error)
+    +GetByUsername(username string) (*domain.User, error)
+    +Create(fullname, username, password, email string) (*domain.User, error)
+    +Update(userId, fullname, username, email string) (*domain.User, error)
+}
+struct internal.user.repo.db{
+    -conn *sql.DB
+}
+struct internal.user.usecase.User{
+    +Repo *repo.User
+}
+struct internal.user.handler.api.User{
+    -useCase *user.usecase.User
+    -login()
+    -register()
+    -profile()
+}
+
+internal.user.repo.db ..|> internal.user.repo.User
+internal.user.usecase.User ..|> shared.domain.UserUsecase
+internal.user.usecase.User <-- internal.user.repo.db
+internal.user.handler.api.User <-- internal.user.usecase.User
+
+@enduml
