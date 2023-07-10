@@ -1,0 +1,51 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface shared.domain.PostUsecase{
+    +GetAll() ([]*Post, error)
+    +GetByID(postId string) (*Post, error)
+    +GetByAuthor(authorId string) ([]*Post, error)
+    +Create(topic, authorId string) (*Post, error)
+    +GetLikeByPost(postId string) ([]*PostLike, error)
+    +ToggleLike(postId, authorId string) (*PostLike, error)
+    +CreateComment(postId, comment, userId string) (*PostComment, error)
+    +GetCommentByID(commentId string) (*PostComment, error)
+    +GetCommentByPostID(postId string) ([]*PostComment, error)
+}
+interface internal.post.repo.Post{
+    +GetAll() (*[]*domain.Post, error)
+    +GetByID(postId string) (*domain.Post, error)
+    +GetByAuthor(authorId string) (*[]*domain.Post, error)
+    +Create(topic string, authorId string) (*domain.Post, error)
+    +Update(topic string) (*domain.Post, error)
+    +GetLikeByPostID(postId string) ([]*domain.PostLike, error)
+    +GetLikeByPostAndUserID(postId, userId string) (*domain.PostLike, error)
+    +CreateLike(postId, userId string) (*domain.PostLike, error)
+    +DeleteLike(postId, userId string) error
+    +CreateComment(postId, userId, comment string) (*domain.PostComment, error)
+    +GetCommentByID(commentId string) (*domain.PostComment, error)
+    +GetCommentByPostID(postId string) ([]*domain.PostComment, error)
+}
+struct internal.post.repo.db {
+    -conn *sql.DB
+}
+struct internal.post.usecase.Post {
+    +Repo *repo.Post
+}
+struct internal.post.handler.api.Post {
+    -useCase *usecase.Post
+    -getAll()
+    -create()
+    -toggleLike()
+    -getLikeByPost()
+    -CreateComment()
+    -GetCommentByID()
+    -GetCommentByPostID()
+}
+
+internal.post.repo.db ..^ internal.post.repo.Post
+internal.post.usecase.Post ..^ shared.domain.PostUsecase
+internal.post.usecase.Post <-- internal.post.repo.db
+internal.post.handler.api.Post <-- internal.post.usecase.Post
+
+@enduml
